@@ -17,16 +17,14 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="alert in alerts">
-								<td><p v-for="customer in customers" :hidden="customer.id !== alert.customer_id">{{customer.name}}</p></td>
+							<tr v-for="alert in alerts" :key="alert.id">
+								<td><p v-for="customer in customers" :key="customer.id" :hidden="customer.id !== alert.customer_id">{{customer.name}}</p></td>
 								<td>{{alert.date_range}}</td>
 								<td :class="[alert.status === 1 ? 'text-danger' : 'text-success']">{{alert.short_description}}</td>
 								<td><button @click="changeCurrentAlert(alert)" class="btn btn-outline-info btn-block">Select</button></td>
 							</tr>
 						</tbody>
 					</table>
-
-
 					<nav aria-label="...">
 					  <ul class="pagination">
 					    <li :class="[{disabled: !pagination.prev_page_url}]" class="page-item">
@@ -40,8 +38,6 @@
 					    </li>
 					  </ul>
 					</nav>
-
-
 				</div>
 			</div>
 		</div>
@@ -70,7 +66,7 @@
 					</div>
 					<div class="form-group">
 						<select class="form-control" v-model="alert.customer_id">
-							<option v-for="customer in customers" :selected="customer.id === alert.customer_id" :value="customer.id">{{customer.name}}</option>
+							<option v-for="customer in customers" :key="customer.id" :selected="customer.id === alert.customer_id" :value="customer.id">{{customer.name}}</option>
 						</select>
 					</div>
 					<div :hidden="this.edit === true">
@@ -79,14 +75,13 @@
 					<div :hidden="this.edit === false">
 						<div class="row">
 							<div class="col-md-6"><button @click="updateAlert(alert)" class="btn btn-block btn-outline-info">Edit</button></div>
-							<div class="col-md-6"><button @click="deleteAlert(alert.id)"class="btn btn-block btn-outline-info">Delete</button></div>
+							<div class="col-md-6"><button @click="deleteAlert(alert.id)" class="btn btn-block btn-outline-info">Delete</button></div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
 </template>
 
 <script>
@@ -145,7 +140,6 @@
 				}
 			},
 			createAlert(){
-				console.log('sdljaskjdaksjd');
 				axios.post('api/alert/create', {
 					customer_id: this.alert.customer_id,
 					user_id: this.user.id,

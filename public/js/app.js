@@ -47545,11 +47545,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -47611,7 +47606,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		createAlert: function createAlert() {
 			var _this2 = this;
 
-			console.log('sdljaskjdaksjd');
 			axios.post('api/alert/create', {
 				customer_id: this.alert.customer_id,
 				user_id: this.user.id,
