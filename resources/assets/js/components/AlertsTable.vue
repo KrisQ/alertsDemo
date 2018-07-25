@@ -10,20 +10,20 @@
 
 						<div class="col-md-8">
 							<div class="dropdown">
-								<button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									Table Size: {{pageSize}}
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-									<a class="dropdown-item" href="#" @click="updateTableSize(5)">5</a>
-									<a class="dropdown-item" href="#" @click="updateTableSize(10)">10</a>
-									<a class="dropdown-item" href="#" @click="updateTableSize(25)">25</a>
+									<li><a class="dropdown-item" href="#" @click="updateTableSize(5)">5</a></li>
+									<li><a class="dropdown-item" href="#" @click="updateTableSize(10)">10</a></li>
+									<li><a class="dropdown-item" href="#" @click="updateTableSize(25)">25</a></li>
 								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4">
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="Search Table" @input="updateAlertList">
+								<input type="text" class="form-control" placeholder="Search Table" @input="updateAlertList" v-model="search">
 							</div>
 						</div>
 
@@ -33,9 +33,9 @@
 					<table class="table table-bordered datatables" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc">
 						<thead>
 							<tr>
-								<th @click="updateSortBy('customer')">Customer</th>
-								<th @click="updateSortBy('date_range')">Date Range</th>
-								<th @click="updateSortBy('short_description')">Short Description</th>
+								<th @click="updateSortBy('customer')">Customer <span v-if="sortBy == 'customer'" :class="[sortDesc === false ? 'glyphicon glyphicon-arrow-up' : 'glyphicon glyphicon-arrow-down']" aria-hidden="true"></span></th>
+								<th @click="updateSortBy('date_range')">Date Range <span v-if="sortBy == 'date_range'" :class="[sortDesc === false ? 'glyphicon glyphicon-arrow-up' : 'glyphicon glyphicon-arrow-down']" aria-hidden="true"></span></th>
+								<th @click="updateSortBy('short_description')">Short Description <span v-if="sortBy == 'short_description'" :class="[sortDesc === false ? 'glyphicon glyphicon-arrow-up' : 'glyphicon glyphicon-arrow-down']" aria-hidden="true"></span></th>
 								<th>Select</th>
 							</tr>
 						</thead>
@@ -44,20 +44,20 @@
 								<td><p v-for="customer in customers" :key="customer.id" :hidden="customer.id !== alert.customer_id">{{customer.name}}</p></td>
 								<td>{{alert.date_range}}</td>
 								<td :class="[alert.status === 1 ? 'text-danger' : 'text-success']">{{alert.short_description}}</td>
-								<td><button @click="changeCurrentAlert(alert)" class="btn btn-outline-info btn-block">Select</button></td>
+								<td><button @click="changeCurrentAlert(alert)" class="btn btn-info btn-block">Select</button></td>
 							</tr>
 						</tbody>
 					</table>
 					<nav aria-label="...">
 					  <ul class="pagination">
-						<li :class="[{disabled: currentPage == 0}]" class="page-item">
+						<li :class="[{hidden: currentPage == 0}]" class="page-item">
 					      <a class="page-link" href="#" @click="updatePage(currentPage - 1)" tabindex="-1">Previous</a>
 					    </li>
 					    <li class="page-item disabled text-dark">
 					    	<a class="page-link text-dark" href="">Page {{currentPage + 1}} of {{lastPage + 1}}</a>
 					    </li>
 					    <!-- <li :class="[{disabled: !pagination.next_page_url}]" class="page-item"> -->
-						<li :class="[{disabled: currentPage == lastPage}]" class="page-item">
+						<li :class="[{hidden: currentPage == lastPage}]" class="page-item">
 					      <a class="page-link" @click="updatePage(currentPage + 1)" href="#">Next</a>
 					    </li>
 					  </ul>
@@ -71,7 +71,7 @@
 					<h2>Alert</h2>
 				</div>
 				<div class="card-body">
-					<button :hidden="this.edit === false" class="btn btn-outline-info btn-block" @click="createAlertIsTrue()">Add New Alert</button>
+					<button :class="[{hidden: this.edit === false}]" class="btn btn-info btn-block" @click="createAlertIsTrue()">Add New Alert</button>
 					<br>
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="Short Description" v-model="alert.short_description">
@@ -94,12 +94,12 @@
 						</select>
 					</div>
 					<div :hidden="this.edit === true">
-						<button @click="createAlert()" class="btn btn-block btn-outline-info">Create</button>
+						<button @click="createAlert()" class="btn btn-block btn-info">Create</button>
 					</div>
 					<div :hidden="this.edit === false">
 						<div class="row">
-							<div class="col-md-6"><button @click="updateAlert(alert)" class="btn btn-block btn-outline-info">Edit</button></div>
-							<div class="col-md-6"><button @click="deleteAlert(alert.id)" class="btn btn-block btn-outline-info">Delete</button></div>
+							<div class="col-md-6"><button @click="updateAlert(alert)" class="btn btn-block btn-info">Edit</button></div>
+							<div class="col-md-6"><button @click="deleteAlert(alert.id)" class="btn btn-block btn-info">Delete</button></div>
 						</div>
 					</div>
 				</div>
@@ -115,8 +115,6 @@
 				alerts: [],
 				resetedAlerts: [],
 				visibleAlerts: [],
-				// currentSort:'short_description',
-				  // currentSortDir:'asc',
 				sortBy: 'id',
       			sortDesc: false,
 				alert : {
@@ -135,6 +133,7 @@
 				currentPage: 0,
 				lastPage: 0,
 				pageSize: 5,
+				search:''
 			}
 		},
 		created(){
@@ -162,17 +161,17 @@
 				let vm = this;
 				if(this.sortBy === 'id'){
 					if(this.sortDesc === true){
-						this.alerts.sort((a,b) => {
+						this.alerts = this.alerts.sort((a,b) => {
 							return a[1] - b[1];
 						});
 					} else {
-						this.alerts.reverse((a,b) => {
+						this.alerts = this.alerts.reverse((a,b) => {
 							return a[1] - b[1];
 						});
 					}
 				} else {
 					if(this.sortDesc === true){
-						this.alerts.sort(function(a, b) {
+						this.alerts = this.alerts.sort(function(a, b) {
 							if (a[vm.sortBy] < b[vm.sortBy]) {
 								return -1;
 							}
@@ -183,7 +182,7 @@
 							return 0;
 						});
 					} else {
-						this.alerts.reverse(function(a, b) {
+						this.alerts = this.alerts.reverse(function(a, b) {
 							if (a[vm.sortBy] < b[vm.sortBy]) {
 								return -1;
 							}
@@ -194,6 +193,12 @@
 							return 0;
 						});
 					}
+				}
+				if(this.search != ''){
+					let val = this.search;
+					this.alerts = this.alerts.filter((alert) => {
+						return alert.short_description.includes(val) || alert.long_description.includes(val);
+					});
 				}
                 this.visibleAlerts = this.alerts.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize);
                 if (this.visibleAlerts.length == 0 && this.currentPage > 0){
@@ -223,9 +228,8 @@
 
 			},
 
-			updateAlertList(event){
-				console.log(event.target.value);
-				let val = event.target.value;
+			updateAlertList(){
+				let val = this.search;
 				this.alerts = this.alerts.filter((alert) => {
 					return alert.short_description.includes(val) || alert.long_description.includes(val);
 				});
@@ -235,19 +239,6 @@
 			resetAlerts(page_url){
 				this.alerts = this.resetedAlerts;
 			},
-			// sortStatus: (s) => {
-			// 	//if s == current sort, reverse
-			// 	if(s === this.currentSort) {
-			// 		this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
-			// 	}
-			// 	this.currentSort = s;
-			// },
-			// sortBy: function(sortKey) {
-			// 	this.reverse = (this.sortKey == sortKey) ? ! this.reverse : false;
-
-			// 	this.sortKey = sortKey;
-			// },
-			
 			updateTableSize(tableSize){
 				this.pageSize = tableSize;
 				this.updateVisibleAlerts();
@@ -317,18 +308,5 @@
 						.catch(error => console.log(error));
 			}
 		},
-		// computed:{
-		// 	sortedAlerts: () => {
-		// 		return this.alerts.sort((a,b) => {
-		// 		let modifier = 1;
-		// 		if(this.currentSortDir === 'desc') modifier = -1;
-		// 		if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-		// 		if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-		// 		return 0;
-		// 		// this.updateVisibleAlerts()
-		// 		});
-		// 	}
-		// }
-
 	}
 </script>

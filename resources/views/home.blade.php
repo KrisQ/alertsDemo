@@ -8,9 +8,9 @@
     <div id="app">
             {{-- <alerts></alerts> --}}
             <br>
-            {{-- <alerts-table></alerts-table> --}}
+            <alerts-table></alerts-table>
             <br>
-            <bootstrap-table></bootstrap-table>
+            {{-- <bootstrap-table></bootstrap-table> --}}
 
 
 
