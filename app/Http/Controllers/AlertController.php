@@ -32,8 +32,8 @@ class AlertController extends Controller
             "customers" => $users,
             "alerts" => $alerts
         ];
-    }
-
+	}
+	
     public function getOne($id){
     	$alert = Alert::findOrfail($id);
     	return $alert;
@@ -52,5 +52,24 @@ class AlertController extends Controller
     public function delete($id){
     	$alert = Alert::findOrFail($id)->delete();
     	return ["Message", "destroyed" ];
-    }
+	}
+	
+	public function getAllWithoutPaginate(){
+		$user = Auth::user();
+        $users = User::all();
+    	$alerts = Alert::orderBy('created_at', 'desc')->get();
+    	return [
+            "user" => $user,
+            "customers" => $users,
+            "alerts" => $alerts
+        ];
+	}
+
+	public function getAlerts(){
+    	$alerts = Alert::all();
+    	return $alerts;
+	}
+
+
+
 }

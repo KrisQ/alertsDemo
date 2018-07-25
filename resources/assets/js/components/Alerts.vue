@@ -7,7 +7,7 @@
 				</div>
 				<div class="card-body">
 					<div v-if="message !== ''" @click="fetchAlerts()" class="alert alert-info" role="alert" v-text="message"></div>
-					<table class="table table-bordered">
+					<table class="table table-bordered datatables">
 						<thead>
 							<tr>
 								<th>Customer</th>

@@ -37,4 +37,10 @@ Route::prefix('api/alert')->group(function () {
 	//DELETE
 	Route::delete('{id}/delete', 'AlertController@delete');
 
+	//GET ALL WITHOUT PAGINATE
+	Route::get('/all', 'AlertController@getAllWithoutPaginate');
+
+	//GET ALL ALERTS ONLY
+	Route::get('/alerts', 'AlertController@getAlerts');
+
 });

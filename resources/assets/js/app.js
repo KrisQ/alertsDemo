@@ -8,6 +8,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import {ServerTable, ClientTable, Event} from 'vue-tables-2';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,13 +16,26 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component(
+	'example-component',
+	require('./components/ExampleComponent.vue')
+);
 
 Vue.component(
 	'alerts',
 	 require('./components/Alerts.vue')
 );
 
+Vue.component(
+	'alerts-table',
+	 require('./components/AlertsTable.vue')
+);
+
+
+Vue.use(ServerTable);
+Vue.use(ClientTable);
+
+
 const app = new Vue({
-    el: '#app'
+	el: '#app',
 });
