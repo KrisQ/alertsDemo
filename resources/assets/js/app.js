@@ -8,7 +8,9 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-import {ServerTable, ClientTable, Event} from 'vue-tables-2';
+import BootstrapVue from 'bootstrap-vue'
+
+Vue.use(BootstrapVue);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -31,9 +33,10 @@ Vue.component(
 	 require('./components/AlertsTable.vue')
 );
 
-
-Vue.use(ServerTable);
-Vue.use(ClientTable);
+Vue.component(
+	'bootstrap-table',
+	 require('./components/BootstrapTable.vue')
+);
 
 
 const app = new Vue({

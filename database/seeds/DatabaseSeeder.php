@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         //     'status' => 1
         // ]);
 
-        factory(App\Alert::class, 3000)->create();
+        factory(App\Alert::class, 30)->create();
     
 
     }
